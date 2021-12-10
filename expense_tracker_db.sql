@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2021 at 07:24 PM
+-- Generation Time: Dec 10, 2021 at 07:12 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.1
 
@@ -73,7 +73,8 @@ INSERT INTO `expenses` (`id`, `amount`, `date`, `user_id`, `expense_type_id`, `e
 (6, 15, '2021-11-30 23:00:00', 1, 2, 2),
 (7, 85, '2021-12-04 23:00:00', 1, 3, NULL),
 (8, 81, '1977-01-05 23:00:00', 1, 2, 1),
-(9, 150, '2021-12-05 23:00:00', 1, 1, NULL);
+(9, 150, '2021-12-05 23:00:00', 1, 1, NULL),
+(10, 10, '2021-12-09 23:00:00', 1, 3, NULL);
 
 -- --------------------------------------------------------
 
@@ -104,17 +105,18 @@ INSERT INTO `expense_subtypes` (`id`, `name`, `expense_type_id`) VALUES
 
 CREATE TABLE `expense_types` (
   `id` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8_bin NOT NULL
+  `name` varchar(255) COLLATE utf8_bin NOT NULL,
+  `color` varchar(255) COLLATE utf8_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `expense_types`
 --
 
-INSERT INTO `expense_types` (`id`, `name`) VALUES
-(1, 'Gorivo'),
-(2, 'Računi'),
-(3, 'Obrazovanje');
+INSERT INTO `expense_types` (`id`, `name`, `color`) VALUES
+(1, 'Gorivo', '#47D900'),
+(2, 'Računi', '#FFCE56'),
+(3, 'Obrazovanje', '#36A2EB');
 
 -- --------------------------------------------------------
 
@@ -153,8 +155,8 @@ CREATE TABLE `user_expense_type` (
 --
 
 INSERT INTO `user_expense_type` (`user_id`, `expense_type_id`) VALUES
-(1, 2),
 (1, 3),
+(1, 2),
 (1, 1);
 
 --
@@ -218,7 +220,7 @@ ALTER TABLE `attachments`
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `expense_subtypes`
