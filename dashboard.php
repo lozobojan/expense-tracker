@@ -14,7 +14,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- <link href="./style.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/fontawesome.min.css">
-    <link rel="stylesheet" href="./assets/styles.css">
+    <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
 <body>
 
@@ -83,9 +83,14 @@
       </div>
 
       <div class="row mt-4">
+            
+            <div class="col-3 pt-5">
+                <canvas id="pieChart" width="400" height="400"></canvas>
+                <h6 class="text-end">Ukupno: <span id="expensesTotal"></span> €</h6>
+            </div>
 
             <!-- last 10 expenses table -->
-            <div class="col-9 offset-3 table-responsive">
+            <div class="col-9 table-responsive">
                 <h5>
                     Poslednjih
                         <form action="dashboard.php" method="GET" id="selectLimitForm">
@@ -159,79 +164,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" ></script>
-    <script>
-        
-        window.addEventListener("load", () => {
-            loadTypes();
-        });
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js"></script>
+    <script src="./assets/js/dashboard_chart.js"></script>
+    <script src="./assets/js/dashboard.js"></script>
 
-        function save(type_id){
-            let url = "./users/add_remove_type.php";
-            let formData = new FormData();
-            formData.append('type_id', type_id);
-
-            fetch(url, { method: 'POST', body: formData })
-                .then(function (response) {
-                    return response.text();
-                }).then(function (body) {
-                    console.log(body);
-
-                    loadTypes();
-            });
-
-
-        }
-
-        async function getSubtypes(){
-            let type_id = document.getElementById('selectType').value;
-            let response = await fetch('./types/get_subtypes.php?type_id='+type_id);
-            let subtypes = await response.json();
-
-            let subtypeOptions = "";
-            subtypes.forEach( (subtype) => {
-                subtypeOptions += `<option value="${subtype.id}" >${subtype.name}</option>`;
-            });
-
-            document.getElementById('selectSubtype').innerHTML = subtypeOptions;
-        }
-
-        async function loadTypes(){
-            let response = await fetch("./users/load_types.php");
-            let types = await response.json();
-
-            let typeOptions = "<option value=\"\">- odaberite tip -</option>";
-            types.forEach( (type) => {
-                typeOptions += `<option value="${type.id}" >${type.name}</option>`;
-            });
-
-            document.getElementById('selectType').innerHTML = typeOptions;
-        }
-
-        async function showAttachments(expense_id){
-            let response = await fetch("./expenses/get_attachments.php?expense_id="+expense_id);
-            let attachments = await response.json();
-
-            let tableBody = "";
-            attachments.forEach((attachment) => {
-                let downloadBtn = `<a download href="${attachment.file_path}" class="btn btn-sm btn-primary" >preuzmi</a>`;
-                tableBody += `<tr><td>${attachment.description}</td><td>${downloadBtn}</td></tr>`;
-            });
-
-            document.getElementById("attachmentsTableBody").innerHTML = tableBody;
-            let attachmentModal = new bootstrap.Modal(document.getElementById('attachmentsModal'));
-            attachmentModal.show();
-        }
-
-        function addNewAttachment(expense_id){
-            document.getElementById("newAttachmentExpenseId").value = expense_id;
-            let newAttachmentModal = new bootstrap.Modal(document.getElementById('newAttachmentModal'));
-            newAttachmentModal.show();
-        }
-
-        function changeLimit(){
-            document.getElementById("selectLimitForm").submit();
-        }
-
-    </script>
 </body>
 </html>

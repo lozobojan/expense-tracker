@@ -14,7 +14,6 @@
     $res_types = mysqli_query($dbconn, $sql_types);
 
     $types = [];
-
     while($type = mysqli_fetch_assoc($res_types)){
         $types[] = $type;
     }

@@ -29,4 +29,10 @@
         return $result;
     }
 
+    function generateColor($opacity = 1){
+        $r = rand(0, 255);
+        $g = rand(0, 255);
+        $b = rand(0, 255);
+        return "rgba($r, $g, $b, $opacity)";
+    }
 ?>
