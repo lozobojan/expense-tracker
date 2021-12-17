@@ -1,3 +1,7 @@
 #selectLimitForm{
     display: inline;
 }
+.row-total{
+    font-weight: bold;
+    font-size: 16px;
+}

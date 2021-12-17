@@ -30,7 +30,7 @@
         "labels" => $labels,
         "data" => $data,
         "colors" => $colors,
-        "total" => $total,
+        "total" => number_format($total,2),
     ];
 
     echo json_encode($res_arr);

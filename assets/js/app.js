@@ -1,7 +1,3 @@
-window.addEventListener("load", () => {
-    loadTypes();
-    displayChart();
-});
 
 function save(type_id){
     let url = "./users/add_remove_type.php";
@@ -16,7 +12,6 @@ function save(type_id){
 
             loadTypes();
     });
-
 
 }
 
