@@ -42,7 +42,7 @@
       </div>
       <div class="row mt-4">
           <div class="col-3 offset-9 text-end">
-              <input type="checkbox" name="group_by_type" id="group_by_type" value="1">
+              <input type="checkbox" name="group_by_type" id="group_by_type">
               <label for="group_by_type"> grupisano po tipu</label>
           </div>
       </div>
@@ -53,7 +53,7 @@
                 <thead>
                     <tr>
                         <th>Tip troška</th>
-                        <th>Datum</th>
+                        <th id="report_date_th" >Datum</th>
                         <th>Iznos</th>
                     </tr>
                 </thead>
@@ -61,6 +61,15 @@
 
                 </tbody>
             </table>
+
+            <div class="row mt-3">
+                <div class="col-3">
+                    <form action="./reports/export_xlsx.php" method="GET">
+                        <input type="hidden" name="grouped" id="groupedChk" value="0">
+                        <button class="btn btn-success w-100">Eksportuj u XLSX</button>
+                    </form>
+                </div>
+            </div>
           </div>
       </div>
 
@@ -75,7 +84,11 @@
         });
 
         async function showReport(){
+
+            let grouped = document.getElementById("group_by_type").checked;
             let url = "./reports/generate_report.php";
+            if(grouped) url = "./reports/generate_report_grouped.php";
+
             let formData = new FormData();
 
             if(document.getElementById("amount_from").value < 0 || document.getElementById("amount_to").value < 0){
@@ -92,17 +105,28 @@
             let response = await fetch(url, { method: 'POST', body: formData });
             let reportData = await response.json();
 
-            displayReportTable(reportData);
+            displayReportTable(reportData, grouped);
         }
 
-        function displayReportTable(reportData){
+        function displayReportTable(reportData, grouped = false){
             let rows = '';
             let total = 0;
+
+            if(grouped) document.getElementById("report_date_th").classList.add("d-none");
+            else document.getElementById("report_date_th").classList.remove("d-none");
+
             reportData.forEach((data) => {
-                rows += `<tr><td>${data.type_name}</td><td>${data.date}</td><td>${parseFloat(data.amount).toFixed(2)} €</td></tr>`;
+
+                let dateColumn = "";
+                if(!grouped) dateColumn = `<td>${data.date}</td>`;
+
+                rows += `<tr><td>${data.type_name}</td>${dateColumn}<td>${parseFloat(data.amount).toFixed(2)} €</td></tr>`;
                 total += parseFloat(data.amount);
+
             });
-            rows += `<tr class="row-total"><td colspan="2">Ukupno: </td><td>${total.toFixed(2)} €</td></tr>`;
+            let colspan = '';
+            if(!grouped) colspan = 'colspan="2"';
+            rows += `<tr class="row-total"><td ${colspan}>Ukupno: </td><td>${total.toFixed(2)} €</td></tr>`;
 
             if(reportData.length > 0){
                 document.getElementById("reportTableBody").innerHTML = rows;
@@ -117,6 +141,15 @@
             let alert = `<div class="alert alert-warning text-center col-12">Nema podataka za zadati kriterijum!</div>`;
             document.getElementById("result-div").innerHTML += alert;
         }
+
+        document.getElementById("group_by_type").addEventListener('change', () => {
+            if(document.getElementById("group_by_type").checked){
+                document.getElementById("groupedChk").value = 1;
+            }
+            else{
+                document.getElementById("groupedChk").value = 0;
+            }
+        });
     </script>
 
 </body>
