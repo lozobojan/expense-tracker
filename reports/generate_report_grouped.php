@@ -17,6 +17,9 @@
         ];
     }
 
+    $_SESSION['report_data'] = $res_arr; // simuliramo cache
+    $_SESSION['report_data_grouped'] = true;
+
     echo json_encode($res_arr);
 
 ?>

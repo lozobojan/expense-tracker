@@ -2,6 +2,7 @@
 
     include './db_connect.php';
     include './auth.php';
+    $currentPage = "reports";
 
 ?>
 <!DOCTYPE html>
@@ -17,6 +18,8 @@
     <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
 <body>
+
+    <?php include('./navbar.php'); ?>
 
     <div class="container pt-5">
       

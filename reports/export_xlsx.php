@@ -3,37 +3,36 @@
 require '../vendor/autoload.php';
 include '../db_connect.php';
 include '../auth.php';
-include './functions.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
+    $is_grouped = $_SESSION['report_data_grouped'];
 
     // prepare headlines
     $sheet->setCellValue('A1', 'Tip troška');
-    $sheet->setCellValue('B1', 'Datum');
-    $sheet->setCellValue('C1', 'Iznos');
-
-    // get data from DB
-    /* if($_GET['grouped'] == 1){
-        $base_query = getBaseQuery($currentUserId, true);
-        $sql_report = readCriteriaAndConcatenateClauses($_POST, $base_query) . " group by et.name order by total desc ";  
+    if(!$is_grouped){
+        $sheet->setCellValue('B1', 'Datum');
+        $sheet->setCellValue('C1', 'Iznos');
+    }else{
+        $sheet->setCellValue('B1', 'Iznos');
     }
-    else{
-        $base_query = getBaseQuery($currentUserId);
-        $sql_report = readCriteriaAndConcatenateClauses($_POST, $base_query);
-    } */
 
-    $sql_report = getBaseQuery($currentUserId);
-    $res_report = mysqli_query($dbconn, $sql_report);
-    
+    // read report data from "cache"
+    $report_data = $_SESSION['report_data'];
     $currRowIndex = 3;
-    while($row = mysqli_fetch_assoc($res_report)){
+
+    foreach($report_data as $row){
         $sheet->setCellValue('A'.$currRowIndex, $row['type_name']);
-        $sheet->setCellValue('B'.$currRowIndex, date('d.m.Y', strtotime($row['date'])));
-        $sheet->setCellValue('C'.$currRowIndex, number_format($row['amount'], 2)." €");
+        if(!$is_grouped){
+            $sheet->setCellValue('B'.$currRowIndex, date('d.m.Y', strtotime($row['date'])));
+            $sheet->setCellValue('C'.$currRowIndex, number_format($row['amount'], 2)." €");
+        }else{
+            $sheet->setCellValue('B'.$currRowIndex, number_format($row['amount'], 2)." €");
+        }
+        
         $currRowIndex++;
     }
 

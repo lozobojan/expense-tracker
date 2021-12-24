@@ -64,3 +64,11 @@ function addNewAttachment(expense_id){
 function changeLimit(){
     document.getElementById("selectLimitForm").submit();
 }
+
+function showLogoutMessage(){
+    document.getElementById("logout_button").innerHTML = "Odjava";
+}
+
+function showUserName(userName){
+    document.getElementById("logout_button").innerHTML = userName;
+}
